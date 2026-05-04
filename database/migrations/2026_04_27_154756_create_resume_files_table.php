@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cv_files', function (Blueprint $table) {
+        Schema::create('resume_files', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('cv_name');
+            $table->string('resume_name');
             $table->string('path');
             $table->longText('raw_text')->nullable();
             $table->timestamps();
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cv_files');
+        Schema::dropIfExists('resume_files');
     }
 };

@@ -10,14 +10,14 @@
                     <form action="" method="post" enctype="multipart/form-data">
                         @csrf
                         <fieldset class="fieldset">
-                        <legend class="fieldset-legend">Pick a CV</legend>
-                        <input type="file" name="cvs[]" class="file-input" accept=".pdf" multiple/>
+                        <legend class="fieldset-legend">Pick a Resume</legend>
+                        <input type="file" name="resumes[]" class="file-input" accept=".pdf" multiple/>
                         <label class="label">Max size 4MB</label>
                         </fieldset>
 
-                        @if ($errors->has('cvs.*'))
+                        @if ($errors->has('resumes.*'))
                             <div class="mt-2">
-                                @foreach ($errors->get('cvs.*') as $messages)
+                                @foreach ($errors->get('resumes.*') as $messages)
                                     @foreach ($messages as $message)
                                         <p class="text-sm text-red-500">{{ $message }}</p>
                                     @endforeach
@@ -25,7 +25,7 @@
                                 @endforeach
                             </div>
                         @endif
-                        @error('cvs')
+                        @error('resumes')
                             <p class="text-sm text-red-500">{{ $message }}</p>
                         @enderror
                         <input type="submit" value="Submit" class="btn block mt-2 bg-blue-500 text-white">

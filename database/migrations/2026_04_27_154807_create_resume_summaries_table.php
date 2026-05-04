@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cv_summaries', function (Blueprint $table) {
+        Schema::create('resume_summaries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cv_file_id')->constrained('cv_files')->onDelete('cascade');
+            $table->foreignId('resume_file_id')->constrained('resume_files')->onDelete('cascade');
             $table->string('full_name')->nullable();
             $table->string('email')->nullable();
-            $table->integer('years_of_experience')->default(0);
+            $table->string('job_title')->nullable();
             $table->json('skills')->nullable();
-            $table->string('education')->nullable();
+            $table->integer('experience')->default(0);
             $table->text('ai_summary')->nullable();
+            $table->integer('point')->default(0);
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cv_summaries');
+        Schema::dropIfExists('resume_summaries');
     }
 };
