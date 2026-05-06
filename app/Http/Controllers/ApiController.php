@@ -48,13 +48,15 @@ class ApiController extends Controller
 
         if ($cleanJson) {
             $data = json_decode($cleanJson, true);
+            
+            $itemLowerSkills = array_map('strtolower', $data['technical_skills']);
 
             ResumeSummary::create([
                 'resume_file_id' => $resume->id,
                 'full_name'  => $data['full_name'] ?? 'Unknown',
                 'email'      => $data['email'] ?? null,
                 'job_title'  => $data['job_title'] ?? 'Unknown',
-                'skills'     => json_encode($data['technical_skills'] ?? []),
+                'skills'     => json_encode($itemLowerSkills ?? []),
                 'experience' => $data['years_of_experience'] ?? 0,
                 'ai_summary' => $data['summary'] ?? '', 
                 'point'      => $data['point'] ?? 0

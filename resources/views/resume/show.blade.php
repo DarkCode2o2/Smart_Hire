@@ -41,7 +41,7 @@
                 <div class="flex flex-wrap gap-2">
                     @foreach(json_decode($resume->skills) as $skill)
                         <span class="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium border border-indigo-100">
-                            {{ $skill }}
+                            {{ ucfirst($skill) }}
                         </span>
                     @endforeach
                 </div>
