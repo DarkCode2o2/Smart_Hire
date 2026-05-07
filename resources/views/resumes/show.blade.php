@@ -69,6 +69,25 @@
                         for technical roles.
                     </p>
                 </div>
+
+                @if($resume->status == 'accepted')
+                    <a href="{{ route('resume.print', $resume->id) }}" 
+                    class="bg-blue-600 inline-block mt-4 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                        <i class="fa-solid fa-file-pdf"></i> Download Analysis
+                    </a>
+                @else 
+                    @if($resume['status'] == 'pending')
+                        <div class="flex items-center mt-4 text-xl">
+                            <h2 class="mr-2">Status:</h2>
+                            <h2 class="badge badge-soft badge-warning font-bold"><i class="fa-solid fa-arrows-rotate"></i> Pending</h2>
+                        </div>
+                    @else
+                        <div class="flex items-center mt-4 text-xl">
+                            <h2 class="mr-2">Status:</h2>
+                            <h2 class="badge badge-soft badge-error font-bold"><i class="fa-solid fa-circle-xmark"></i> Rejected</h2>
+                        </div>
+                    @endif
+                @endif
             </div>
         </div>
 

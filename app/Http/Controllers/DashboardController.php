@@ -29,4 +29,10 @@ class DashboardController extends Controller
 
         return view('dashboard', ['resumes' => $resumes]);
     }
+
+    public function updateResumeStatus(Request $request, $id) {
+        $resume = ResumeSummary::findOrFail($id); 
+        $resume->update(['status' => $request->status]);
+        return back()->with('success', 'Status updated to ' . $request->status);
+    }
 }

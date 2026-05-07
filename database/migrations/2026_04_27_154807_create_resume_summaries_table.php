@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('experience')->default(0);
             $table->text('ai_summary')->nullable();
             $table->integer('point')->default(0);
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }
