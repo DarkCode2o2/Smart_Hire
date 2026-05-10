@@ -25,15 +25,18 @@ Route::middleware('auth')->group(function () {
     Route::controller(DashboardController::class)->group(function() {
         Route::get('/dashboard', 'index')->name('dashboard');
         Route::post('/dashboard/{id}/status', 'updateResumeStatus')->name('resume.updateStatus');
-        Route::get('/dashboard/{id}/print', 'printPDF')->name('resume.print');
+        Route::delete('/dashboard/{id}', 'destroyResume')->name('dashboard_resume.destroy');
     });
 
     // Upload Resume
     Route::controller(ResumeController::class)->group(function() {
-        Route::get('/resume/index',  'index')->name('resume_index');
-        Route::get('/resume/upload',  'upload')->name('resume_upload');
+        Route::get('/resume/index',  'index')->name('resume.index');
+        Route::get('/resume/upload',  'upload')->name('resume.upload');
         Route::post('/resume/upload',  'handleResume');
         Route::get('resume/{id}', 'show')->name('resume_show');
+        Route::get('/resume/{id}/print', 'printPDF')->name('resume.print');
+        Route::delete('/resume/{id}', 'destroyResume')->name('resume.destroy');
+
     });
 
 

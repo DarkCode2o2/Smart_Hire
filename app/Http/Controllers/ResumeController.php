@@ -4,17 +4,37 @@ namespace App\Http\Controllers;
 
 use App\Models\ResumeFile;
 use App\Models\ResumeSummary;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Spatie\PdfToText\Pdf as PdfToText;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ResumeController extends Controller
 {
 
-    public function index() {
-        return view('resumes.index');
+    public function index(Request $request) {
+        
+        $query = Auth::user()->resumeSummaries();
+
+
+        if($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function($q) use ($search) {
+                $q->where("full_name", "like", "%{$search}%")
+                ->orwhereJsonContains("skills", $search);
+            });
+        }
+        
+        if($request->filled('min_score')) {
+            $min_score = $request->min_score;
+            $query->where("point", ">=", $min_score);
+        }
+
+        $summaries = $query->orderby('point', 'desc')->paginate(7)->appends($request->query());
+        
+        return view('resumes.index', compact('summaries'));
     }
     
     public function upload() {
@@ -27,15 +47,16 @@ class ResumeController extends Controller
     }
 
     public function handleResume(Request $request) {
+       
         $resumes = $request->file('resumes');
 
         $request->validate([
             'resumes' => 'required|array|max:5|min:1',
-            'resumes.*' => 'required|file|mimes:pdf|max:3000'
-        ], [
-            'resumes.max'   => 'cannot upload more than 5 resumes',
-            'resumes.*.mimes' => 'Only PDF are allowed',
-            'resumes.*.max' => "a File can't be more than 3MB",
+            'resumes.*' => 'required|file|mimes:pdf|max:2000'
+        ],  [
+            'resumes.max' => 'You can only upload up to 5 files.',
+            'resumes.*.mimes' => 'All files must be PDFs.',
+            'resumes.*.max' => 'Some files are too large (Max 2MB).',
         ]);
 
         $binPath = 'C:/poppler/library/bin/pdftotext.exe';
@@ -66,7 +87,23 @@ class ResumeController extends Controller
 
         $pdf = Pdf::loadView('resumes.printPDF', ['resume' => $resume]); 
 
-        return $pdf->download($resume->full_name . '_Analysis.pdf');
+        return $pdf->download(str_replace(' ', '_', $resume->full_name) . '_Analysis.pdf');
 
+    }
+
+    public function destroyResume($fileid) {
+
+        $file = ResumeFile::findOrFail($fileid); 
+
+        if(Auth::id() == $file->user_id) {
+            if(Storage::path($file->path)) {
+                Storage::delete($file->path);
+            }
+
+            $file->delete();
+
+            return back()->with('success', 'Resume deleted successfully!');
+
+        }
     }
 }

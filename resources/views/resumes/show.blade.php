@@ -81,10 +81,16 @@
                             <h2 class="mr-2">Status:</h2>
                             <h2 class="badge badge-soft badge-warning font-bold"><i class="fa-solid fa-arrows-rotate"></i> Pending</h2>
                         </div>
+                        <div role="alert" class="alert bg-blue-600 text-white alert-soft mt-10">
+                            <span><i class="fa-solid fa-circle-info"></i> PDF Download will be available once candidate is "Accepted"</span>
+                        </div>
                     @else
                         <div class="flex items-center mt-4 text-xl">
                             <h2 class="mr-2">Status:</h2>
                             <h2 class="badge badge-soft badge-error font-bold"><i class="fa-solid fa-circle-xmark"></i> Rejected</h2>
+                        </div>
+                        <div role="alert" class="alert bg-blue-600 text-white alert-soft mt-10">
+                            <span><i class="fa-solid fa-circle-info"></i> PDF Download will be available once candidate is "Accepted"</span>
                         </div>
                     @endif
                 @endif

@@ -1,52 +1,8 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Top 5 ') }}
-        </h2>
-    </x-slot>
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <form action="{{ route('dashboard') }}" method="GET" class="flex gap-4 mb-6">
- 
-                <label class="input input-primary w-full">
-                    <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <g
-                        stroke-linejoin="round"
-                        stroke-linecap="round"
-                        stroke-width="2.5"
-                        fill="none"
-                        stroke="currentColor"
-                        >
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.3-4.3"></path>
-                        </g>
-                    </svg>
-                    <input  
-                        type="search" 
-                        name="search" 
-                        value="{{ request('search') }}" 
-                        placeholder="Search by name or skill [php,react...]."  />
-                </label>
-                <select name="min_score" class="select select-primary">
-                    <option value="0" @php echo request('min_score') == '0' ? 'selected' : '' @endphp>All Scores</option>
-                    <option value="85" @php echo request('min_score') == '85' ? 'selected' : '' @endphp>Above 85%</option>
-                    <option value="65" @php echo request('min_score') == '65' ? 'selected' : '' @endphp>Above 65%</option>
-                    <option value="50" @php echo request('min_score') == '50' ? 'selected' : '' @endphp>Above 50%</option>
-                    <option value="30" @php echo request('min_score') == '30' ? 'selected' : '' @endphp>Above 30%</option>
-                </select>
-                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-lg cursor-pointer">Filter</button>
-
-            </form>
            <div class="overflow-x-auto">
-            @session('success')
-                <div class="toast toast-top toast-end">
-                    <div class="alert alert-success">
-                        <span>{{ $value }}</span>
-                    </div>
-                </div>
-            @endsession
-            @if (!$resumes->isEmpty())
+            @if (!$summaries->isEmpty())
                 <h1 class="mb-5 text-3xl">Top 5 Ranked Candidates</h1>
                 <table class="table bg-gray-200 shadow-md rounded">
                     <thead>
@@ -62,13 +18,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach ($resumes as $resume)
+                        @foreach ($summaries as $summary)
                             <tr class="hover:bg-gray-100">
                                 <th>{{$loop->iteration}}</th>
-                                <th>{{$resume['full_name']}}</th>
-                                <td>{{$resume['email']}}</td>
-                                <td>{{$resume['job_title']}}</td>
-                                <td>{{$resume['experience']}} Years</td>
+                                <th>{{$summary['full_name']}}</th>
+                                <td>{{$summary['email']}}</td>
+                                <td>{{$summary['job_title']}}</td>
+                                <td>{{$summary['experience']}} Years</td>
                                 <td>
                                     @php
                                        $colors = [
@@ -80,35 +36,35 @@
                                         $key = array_rand($colors);
                                     @endphp
                                     
-                                    @if ($resume['point'] >= 70)
-                                        <span class="badge badge-success inline-block font-semibold">{{$resume['point']}}<span>
-                                    @elseif($resume['point'] >= 40)
-                                        <span class="badge badge-warning inline-block font-semibold">{{$resume['point']}}<span>
+                                    @if ($summary['point'] >= 70)
+                                        <span class="badge badge-success inline-block font-semibold">{{$summary['point']}}<span>
+                                    @elseif($summary['point'] >= 40)
+                                        <span class="badge badge-warning inline-block font-semibold">{{$summary['point']}}<span>
                                     @else
-                                        <span class="badge badge-error inline-block font-semibold">{{$resume['point']}}<span> 
+                                        <span class="badge badge-error inline-block font-semibold">{{$summary['point']}}<span> 
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($resume['status'] == 'accepted')
+                                    @if ($summary['status'] == 'accepted')
                                         <span class="badge badge-soft badge-success"><i class="fa-solid fa-circle-check"></i> Accepted</span>
-                                    @elseif($resume['status'] == 'pending')
+                                    @elseif($summary['status'] == 'pending')
                                         <span class="badge badge-soft badge-warning"><i class="fa-solid fa-arrows-rotate"></i> Pending</span>
                                     @else
                                         <span class="badge badge-soft badge-error"><i class="fa-solid fa-circle-xmark"></i> Rejected</span>
                                     @endif
                                 </td>
                                 <td class="m-1">
-                                    <button class="btn bg-gray-200 font-semibold text-lg" popovertarget="action-{{ $resume->id }}" style="anchor-name:--anchor-{{ $resume->id }}">
+                                    <button class="btn bg-gray-200 font-semibold text-lg" popovertarget="action-{{ $summary->id }}" style="anchor-name:--anchor-{{ $summary->id }}">
                                         <i class="fa-solid fa-ellipsis-vertical"></i>
                                     </button>
                                     <ul class="dropdown menu min-w-[150px] rounded-box bg-base-100 shadow-sm"
-                                        popover id="action-{{ $resume->id }}" style="position-anchor:--anchor-{{ $resume->id }}">
+                                        popover id="action-{{ $summary->id }}" style="position-anchor:--anchor-{{ $summary->id }}">
                                         <li >
-                                            <a class="p-2"  href="{{ route('resume_show', $resume->id) }}"><i class="fa-solid fa-eye text-sky-400"></i> View</a>
+                                            <a class="p-2"  href="{{ route('resume_show', $summary->id) }}"><i class="fa-solid fa-eye text-sky-400"></i> View</a>
                                         </li>
-                                        @if($resume['status'] != 'accepted') 
+                                        @if($summary['status'] != 'accepted') 
                                             <li>
-                                                <form action="{{ route('resume.updateStatus', $resume->id) }}" method="post" class="text-left p-2 rounded">
+                                                <form action="{{ route('resume.updateStatus', $summary->id) }}" method="post" class="text-left p-2 rounded">
                                                     @csrf
                                                     <input type="hidden" name="status" value="accepted">
                                                     <button type="submit" class="cursor-pointer">
@@ -117,9 +73,9 @@
                                                 </form>
                                             </li>
                                         @endif
-                                        @if($resume['status'] != 'rejected') 
+                                        @if($summary['status'] != 'rejected') 
                                             <li>
-                                                <form action="{{ route('resume.updateStatus', $resume->id) }}" method="post" class="text-left p-2 rounded">
+                                                <form action="{{ route('resume.updateStatus', $summary->id) }}" method="post" class="text-left p-2 rounded">
                                                     @csrf
                                                     <input type="hidden" name="status" value="rejected">
                                                     <button type="submit" class="cursor-pointer">
@@ -128,17 +84,22 @@
                                                 </form>
                                             </li>
                                         @endif
-                                        {{-- <li>
-                                            
-                                            <a href="{{ route('resume_show', $resume->id) }}"><i class="fa-solid fa-trash text-red-500"></i> Delete</a>
-                                        </li> --}}
+                                        <li>
+                                            <form id="delete-form-{{ $summary->resume_file_id }}" action="{{ route('dashboard_resume.destroy', $summary->resume_file_id) }}" method="post" class="text-left rounded p-0 m-0">
+                                                @csrf
+                                                @method("delete")
+                                            </form>
+                                            <button type="button" class="p-2 cursor-pointer w-full" onclick="confirmDelete({{ $summary->resume_file_id }})">
+                                                <i class="fa-regular fa-trash-can text-red-500"></i> Delete
+                                            </button>
+                                        </li>
                                     </ul>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-                @elseif($resumes->empty() && request('search') || request('min_score'))
+                @elseif($summarys->empty() && request('search') || request('min_score'))
 
                     <div class="flex justify-center items-center flex-col">
                          <h2 class="mb-4 text-3xl">No candidates found matching your criteria</h2>

@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Http;
 class ApiController extends Controller
 {
     static function analyzeResume(ResumeFile $resume) {
-
         $prompt = 'Act as a Senior Technical Recruiter. Analyze the provided Resume text with a critical eye. Extract the following fields: full_name, email, job_title, technical_skills (array), years_of_experience, and a summary. 
         Additionally, provide a point (0-100) based on:
         Depth and variety of technical skills.

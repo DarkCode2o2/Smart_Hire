@@ -10,6 +10,10 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
+    public function resumeSummaries() {
+        return $this->hasManyThrough(ResumeSummary::class, ResumeFile::class);
+    }
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
