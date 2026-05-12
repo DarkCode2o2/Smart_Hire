@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Spatie\PdfToText\Pdf as PdfToText;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Support\Facades\Storage;
 
 class ResumeController extends Controller
@@ -33,7 +34,6 @@ class ResumeController extends Controller
         }
         $summaries = $query->orderby('point', 'desc')->paginate(7)->appends($request->query());
         
-        
         return view('resumes.index', compact('summaries', 'count'));
     }
     
@@ -42,7 +42,8 @@ class ResumeController extends Controller
     }
 
     public function show(int $id) {
-        $resume = ResumeSummary::findOrFail($id);
+        $resume = Auth::user()->resumeSummaries->findOrFail($id);
+
         return view('resumes.show', compact('resume'));
     }
 

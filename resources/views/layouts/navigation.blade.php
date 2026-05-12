@@ -6,7 +6,9 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <div class="text-2xl font-extrabold tracking-tight text-blue-700">
+                            SmartHire<span class="text-slate-400">AI</span>
+                        </div>
                     </a>
                 </div>
 

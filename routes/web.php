@@ -30,7 +30,7 @@ Route::middleware('auth')->group(function () {
 
     // Upload Resume
     Route::controller(ResumeController::class)->group(function() {
-        Route::get('/resume/index',  'index')->name('resume.index');
+        Route::get('/resumes',  'index')->name('resume.index');
         Route::get('/resume/upload',  'upload')->name('resume.upload');
         Route::post('/resume/upload',  'handleResume');
         Route::get('resume/{id}', 'show')->name('resume_show');
