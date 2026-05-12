@@ -1,8 +1,33 @@
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="stats shadow mt-2 mb-10 flex bg-white">
+                <div class="stat">
+                    <div class="stat-figure text-primary">
+                        <i class="fa-solid fa-circle-check text-3xl"></i>
+                    </div>
+                    <div class="stat-title font-semibold">Total Resumes</div>
+                    <div class="stat-value text-primary text-5xl">{{ $totalCount }}</div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-figure text-warning">
+                        <i class="fa-solid fa-arrows-rotate text-3xl"></i>
+                    </div>
+                    <div class="stat-title font-semibold">Pending Resumes</div>
+                    <div class="stat-value text-warning text-5xl">{{$totalPending}}</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-figure text-red-500">
+                        <i class="fa-solid fa-file-circle-xmark text-3xl"></i>
+                    </div>
+                    <div class="stat-title font-semibold">Rejected Resumes</div>
+                    <div class="stat-value text-red-500 text-5xl">{{$totalRejected}}</div>
+                </div>
+            </div>
+
            <div class="overflow-x-auto">
-            @if (!$summaries->isEmpty())
+            @if (!$topSummaries->isEmpty())
                 <h1 class="mb-5 text-3xl">Top 5 Ranked Candidates</h1>
                 <table class="table bg-gray-200 shadow-md rounded">
                     <thead>
@@ -18,7 +43,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach ($summaries as $summary)
+                        @foreach ($topSummaries as $summary)
                             <tr class="hover:bg-gray-100">
                                 <th>{{$loop->iteration}}</th>
                                 <th>{{$summary['full_name']}}</th>
@@ -99,14 +124,8 @@
                         @endforeach
                     </tbody>
                 </table>
-                @elseif($summarys->empty() && request('search') || request('min_score'))
-
-                    <div class="flex justify-center items-center flex-col">
-                         <h2 class="mb-4 text-3xl">No candidates found matching your criteria</h2>
-                        <a href="/dashboard" class="btn btn-primary text-lg">Show All</a>
-                    </div>
                 @else
-                    <h2 class=" text-center text-2xl mt-5 mb-3">No resumes analyzed yet. Upload your first one <a class="btn bg-sky-400 text-white rounded border border-sky-400" href="{{ route('resume_upload') }}">Upload</a></h2>
+                    <h2 class=" text-center text-2xl mt-5 mb-3">No resumes analyzed yet. Upload your first one <a class="btn bg-sky-400 text-white rounded border border-sky-400" href="{{ route('resume.upload') }}">Upload</a></h2>
                 @endif
 
             </div>

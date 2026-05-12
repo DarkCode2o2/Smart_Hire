@@ -16,7 +16,7 @@ class ResumeController extends Controller
     public function index(Request $request) {
         
         $query = Auth::user()->resumeSummaries();
-
+        $count = $query->count();
 
         if($request->filled('search')) {
             $search = $request->search;
@@ -31,10 +31,10 @@ class ResumeController extends Controller
             $min_score = $request->min_score;
             $query->where("point", ">=", $min_score);
         }
-
         $summaries = $query->orderby('point', 'desc')->paginate(7)->appends($request->query());
         
-        return view('resumes.index', compact('summaries'));
+        
+        return view('resumes.index', compact('summaries', 'count'));
     }
     
     public function upload() {
@@ -47,7 +47,7 @@ class ResumeController extends Controller
     }
 
     public function handleResume(Request $request) {
-       
+
         $resumes = $request->file('resumes');
 
         $request->validate([

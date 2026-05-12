@@ -33,7 +33,10 @@
             </form>
            <div class="overflow-x-auto">
             @if (!$summaries->isEmpty())
-                <h1 class="mb-5 text-3xl">All Ranked Candidates</h1>
+                <div class="flex justify-between items-center">
+                    <h1 class="mb-5 text-3xl">All Ranked Candidates</h1>
+                    <span class="badge badge-soft badge-primary font-semibold shadow-sm"><b>{{$count}}</b> Resumes</span>
+                </div>
                 <table class="table bg-gray-200 shadow-md rounded">
                     <thead>
                     <tr>
@@ -134,10 +137,10 @@
 
                     <div class="flex justify-center items-center flex-col">
                          <h2 class="mb-4 text-3xl">No candidates found matching your criteria</h2>
-                        <a href="/dashboard" class="btn btn-primary text-lg">Show All</a>
+                        <a href="{{ route('resume.index') }}" class="btn btn-primary text-lg">Show All</a>
                     </div>
                 @else
-                    <h2 class=" text-center text-2xl mt-5 mb-3">No resumes analyzed yet. Upload your first one <a class="btn bg-sky-400 text-white rounded border border-sky-400" href="{{ route('resume_upload') }}">Upload</a></h2>
+                    <h2 class=" text-center text-2xl mt-5 mb-3">No resumes analyzed yet. Upload your first one <a class="btn bg-sky-400 text-white rounded border border-sky-400" href="{{ route('resume.upload') }}">Upload</a></h2>
                 @endif
 
             </div>

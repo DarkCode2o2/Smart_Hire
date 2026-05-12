@@ -12,9 +12,18 @@ class DashboardController extends Controller
 {
     public function index() {
         
-        $summaries = Auth::user()->resumeSummaries()
-                                    ->orderby('point', 'desc')->take(5)->get();
-        return view('dashboard', ['summaries' => $summaries]);
+        $allSummaries = Auth::user()->resumeSummaries; 
+
+        $totalCount    = $allSummaries->count();
+        $totalPending  = $allSummaries->where('status', 'pending')->count();
+        $totalRejected = $allSummaries->where('status', 'rejected')->count();
+
+        $topSummaries  = Auth::user()->resumeSummaries()
+                            ->orderBy('point', 'desc')
+                            ->take(5)
+                            ->get();
+
+        return view('dashboard', compact('topSummaries', 'totalCount', 'totalPending', 'totalRejected'));
     }
 
     public function updateResumeStatus(Request $request, $id) {

@@ -1,5 +1,4 @@
 <x-app-layout>
-
     <div>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="max-w-3xl mx-auto mt-12 p-6 bg-white rounded-3xl shadow-xl border border-slate-100" 
@@ -29,6 +28,7 @@
                             :class="isDragging ? 'border-blue-500 bg-blue-50' : 'border-slate-200 hover:border-blue-400'"
                             class="relative border-2 border-dashed rounded-2xl p-16 text-center cursor-pointer transition-all duration-300 group">
                             
+                            <!-- تم إضافة x-ref للتحكم في الملفات برمجياً -->
                             <input type="file" name="resumes[]" x-ref="fileInput" class="hidden" accept=".pdf" multiple @change="handleFiles($event)">
 
                             <div class="space-y-4">
@@ -49,6 +49,7 @@
                     <template x-if="files.length > 0">
                         <div class="mt-6 space-y-3">
                             <p class="text-sm font-medium text-slate-600">Selected Files:</p>
+                            
                             <template x-for="(file, index) in files" :key="index">
                                 <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
                                     <div class="flex items-center space-x-3">
@@ -56,9 +57,15 @@
                                         <span class="text-sm font-medium text-slate-700" x-text="file.name"></span>
                                         <span class="text-xs text-slate-400" x-text="Math.round(file.size / 1024) + ' KB'"></span>
                                     </div>
+
+                                    <!-- التعديل هنا: استدعاء دالة الحذف الذكية -->
+                                    <button @click="removeFile(index)" type="button" class="text-xl cursor-pointer">
+                                        <i class="fa-solid fa-xmark hover:text-red-500 transition-colors"></i>
+                                    </button>
                                 </div>
                             </template>
-                            <button @click="submitFiles" class="w-full mt-4 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200">
+
+                            <button @click="submitFiles" class="cursor-pointer w-full mt-4 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200">
                                 Start Analysis
                             </button>
                         </div>
@@ -84,8 +91,24 @@
                 const droppedFiles = Array.from(event.dataTransfer.files).filter(f => f.type === 'application/pdf');
                 if(droppedFiles.length > 0) {
                     this.files = droppedFiles;
-                    // إسناد الملفات للـ Input الحقيقي ليتم إرسالها مع الفورم
+                    // مزامنة الـ Input مع الملفات المسحوبة
                     this.$refs.fileInput.files = event.dataTransfer.files;
+                }
+            },
+
+            // دالة الحذف الجديدة التي تضمن الحذف من الـ Input أيضاً
+            removeFile(index) {
+                // 1. حذف من مصفوفة Alpine للعرض
+                this.files.splice(index, 1);
+
+                // 2. تحديث الـ Input الحقيقي باستخدام DataTransfer
+                const dt = new DataTransfer();
+                this.files.forEach(file => dt.items.add(file));
+                this.$refs.fileInput.files = dt.files;
+
+                // 3. تصفير الـ input إذا فرغت القائمة تماماً
+                if (this.files.length === 0) {
+                    this.$refs.fileInput.value = '';
                 }
             },
             
@@ -98,38 +121,36 @@
         }
     }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            @if ($errors->any())
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000,
-                    timerProgressBar: true,
+    document.addEventListener('DOMContentLoaded', function () {
+        @if ($errors->any())
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+            });
+
+            @if($errors->has('resumes'))
+                Toast.fire({
+                    icon: 'error',
+                    title: "{{ $errors->first('resumes') }}"
                 });
-
-                @if($errors->has('resumes'))
-                    Toast.fire({
-                        icon: 'error',
-                        title: "{{ $errors->first('resumes') }}"
-                    });
-                @endif
-
-                @if($errors->has('resumes.*'))
-                    {{-- نستخدم setTimeout بسيط لضمان ظهور التنبيهين بشكل مرتب إذا وجدا معاً --}}
-                    setTimeout(() => {
-                        Toast.fire({
-                            icon: 'warning',
-                            title: "{{ $errors->first('resumes.*') }}"
-                        });
-                    }, 500);
-                @endif
             @endif
-        });
+
+            @if($errors->has('resumes.*'))
+                setTimeout(() => {
+                    Toast.fire({
+                        icon: 'warning',
+                        title: "{{ $errors->first('resumes.*') }}"
+                    });
+                }, 500);
+            @endif
+        @endif
+    });
     </script>
 
     <style>
         [x-cloak] { display: none !important; }
     </style>
-        
 </x-app-layout>
