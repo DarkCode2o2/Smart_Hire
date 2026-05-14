@@ -6,6 +6,7 @@ use App\Models\ResumeFile;
 use App\Models\ResumeSummary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Psy\Readline\Hoa\Console;
 
 class ApiController extends Controller
 {
@@ -27,45 +28,65 @@ class ApiController extends Controller
         "point": 0
         }';
 
+        // 1. جلب المفاتيح من ملف الـ .env (تأكد أنك وضعتها مفصولة بفاصلة)
+        $apiKeys = explode(',', env('API_GEMINI_KEY')); 
         $text = $prompt . $resume->raw_text;
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json'
-        ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=" . env('API_GEMINI_KEY'), [
-            'contents' => [
-                [
-                    'parts' => [
-                        ['text' => $text]
+        $data = null;
+
+        // 2. محاولة التنفيذ باستخدام المفاتيح المتاحة
+        foreach ($apiKeys as $key) {
+            try {
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/json'
+                ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=" . trim($key), [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $text]
+                            ]
+                        ]
                     ]
-                ]
-            ]
-        ]);
+                ]);
 
-        $aiResponse = $response->json()['candidates'][0]['content']['parts'][0]['text'];
+                // التحقق مما إذا كان الطلب ناجحاً (Status Code 200)
+                if ($response->successful()) {
+                    $aiResponse = $response->json()['candidates'][0]['content']['parts'][0]['text'];
+                    
+                    preg_match('/\{.*\}/s', $aiResponse, $matches);
+                    $cleanJson = $matches[0] ?? null;
 
-        preg_match('/\{.*\}/s', $aiResponse, $matches);
-        $cleanJson = $matches[0] ?? null;
+                    if ($cleanJson) {
+                        $data = json_decode($cleanJson, true);
+                        break; // نجح التحليل! نخرج من الحلقة فوراً
+                    }
+                }
+            } catch (\Exception $e) {
+                // في حال فشل المفتاح الحالي (بسبب التوكنز أو الشبكة)، ننتقل للمفتاح التالي
+                continue;
+            }
+        }
 
-        if ($cleanJson) {
-            $data = json_decode($cleanJson, true);
-            
-            $itemLowerSkills = array_map('strtolower', $data['technical_skills']);
+        // 3. التحقق مما إذا تم الحصول على بيانات بنجاح
+        if ($data) {
+            $itemLowerSkills = array_map('strtolower', $data['technical_skills'] ?? []);
 
             ResumeSummary::create([
                 'resume_file_id' => $resume->id,
                 'full_name'  => $data['full_name'] ?? 'Unknown',
                 'email'      => $data['email'] ?? null,
                 'job_title'  => $data['job_title'] ?? 'Unknown',
-                'skills'     => json_encode($itemLowerSkills ?? []),
+                'skills'     => json_encode($itemLowerSkills),
                 'experience' => $data['years_of_experience'] ?? 0,
                 'ai_summary' => $data['summary'] ?? '', 
-                'point'      => $data['point'] ?? 0
+                'point'      => $data['point'] ?? 0,
+                'status'     => 'pending',
+                'analyze_status' => 'completed' // أضفنا الحالة للتأكد من نجاح العملية
             ]);
-
-
-            return back()->with(['success' => 'Summary added succesfully!']);
-            
         } else {
-            return back()->with(['error' => 'Something went wrong!']);
+            // معالجة حالة فشل جميع المفاتيح
+            return back()->with('error', 'The AI service is temporarily unavailable. Please try again shortly.');
         }
+
+        return back()->with(['success' => 'Summary added succesfully!']);
     }
 }

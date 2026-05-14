@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('ai_summary')->nullable();
             $table->integer('point')->default(0);
             $table->string('status')->default('pending');
+            $table->string('analyze_status')->nullable();
             $table->timestamps();
         });
     }

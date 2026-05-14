@@ -15,13 +15,13 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 </head>
-<body class="text-slate-900">
+<body class="text-slate-900" id="top">
 
-    <nav class="navbar max-w-7xl mx-auto fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
+    <nav class="px-6 py-4 shadow-sm navbar max-w-7xl mx-auto fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
         <div class="navbar-start">
-            <div class="text-2xl font-extrabold tracking-tight text-blue-700">
+            <a href="#top" class="text-2xl font-extrabold tracking-tight text-blue-600">
                 SmartHire<span class="text-slate-400">AI</span>
-            </div>
+            </a>
         </div>
 
         <div class="navbar-center gap-8 items-center text-lg sm:flex hidden font-semibold text-slate-600">

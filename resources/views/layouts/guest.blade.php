@@ -18,7 +18,9 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
             <div>
                 <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                    <div class="text-3xl font-extrabold tracking-tight text-blue-600">
+                        SmartHire<span class="text-slate-400">AI</span>
+                    </div>
                 </a>
             </div>
 

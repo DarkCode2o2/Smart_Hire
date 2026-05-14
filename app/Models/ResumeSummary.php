@@ -16,7 +16,8 @@ class ResumeSummary extends Model
         'experience', 
         'ai_summary',
         'point', 
-        'status'
+        'status',
+        'analyze_status',
     ];
 
     public function file() {

@@ -63,6 +63,7 @@
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>
+
                     </x-slot>
                 </x-dropdown>
             </div>
@@ -88,15 +89,20 @@
         </div>
 
         <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
+        <div class="pt-2 pb-1 border-t border-gray-200">
 
-            <div class="mt-3 space-y-1">
+            <div class="space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
+                </x-responsive-nav-link>
+
+                
+                <x-responsive-nav-link :href="route('resume.upload')" :active="request()->routeIs('resume.upload')">
+                    {{ __('Resume Upload') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('resume.index')" :active="request()->routeIs('resume.index')">
+                    {{ __('Resumes') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->

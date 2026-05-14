@@ -1,15 +1,15 @@
 <x-app-layout>
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 px-4 lg:px-8">
             @if (!$topSummaries->isEmpty())
 
-                <div class="mt-2 mb-10 flex gap-5">
+                <div class="mt-2 mb-10 flex sm:flex-row flex-col gap-5">
                     <div class="stat bg-white rounded-md shadow-md">
-                        <div class="stat-figure text-primary">
+                        <div class="stat-figure text-blue-600">
                             <i class="fa-solid fa-circle-check text-3xl"></i>
                         </div>
                         <div class="font-semibold">Total Resumes</div>
-                        <div class="stat-value text-primary text-5xl">{{ $totalCount }}</div>
+                        <div class="stat-value text-blue-600 text-5xl">{{ $totalCount }}</div>
                     </div>
 
                     <div class="stat bg-white rounded-md shadow-md">

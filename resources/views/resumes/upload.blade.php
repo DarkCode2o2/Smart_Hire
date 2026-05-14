@@ -1,6 +1,6 @@
 <x-app-layout>
     <div>
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 px-4 mb-6 lg:px-8">
             <div class="max-w-3xl mx-auto mt-12 p-6 bg-white rounded-3xl shadow-xl border border-slate-100" 
                 x-data="resumeUploader()">
     
