@@ -7,7 +7,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
 
 
@@ -33,7 +33,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/resumes',  'index')->name('resume.index');
         Route::get('/resume/upload',  'upload')->name('resume.upload');
         Route::post('/resume/upload',  'handleResume');
-        Route::get('resume/{id}', 'show')->name('resume_show');
+        Route::get('resume/{id}', 'show')->name('resume.show');
         Route::get('/resume/{id}/print', 'printPDF')->name('resume.print');
         Route::delete('/resume/{id}', 'destroyResume')->name('resume.destroy');
 

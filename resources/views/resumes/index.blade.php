@@ -104,7 +104,7 @@
                                             <ul class="dropdown menu min-w-[150px] rounded-box bg-base-100 shadow-sm"
                                                 popover id="action-{{ $summary->id }}" style="position-anchor:--anchor-{{ $summary->id }}">
                                                 <li >
-                                                    <a class="p-2"  href="{{ route('resume_show', $summary->id) }}"><i class="fa-solid fa-eye text-sky-400"></i> View</a>
+                                                    <a class="p-2"  href="{{ route('resume.show', $summary->id) }}"><i class="fa-solid fa-eye text-sky-400"></i> View</a>
                                                 </li>
                                                 @if($summary['status'] != 'accepted') 
                                                     <li>

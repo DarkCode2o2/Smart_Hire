@@ -34,7 +34,7 @@
 
         <div class="flex items-center justify-end sm:flex-row flex-col-reverse gap-2 mt-4">
             <a href="/register">
-                <span>Don't have an account yet?</span>
+                <span>Don't have an account?</span>
                  <span class="text-blue-500 underline">Register now</span>
             </a>
             <x-primary-button class="ms-3 cursor-pointer sm:w-fit w-48 text-center !inline-block">

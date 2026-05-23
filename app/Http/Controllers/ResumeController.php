@@ -30,7 +30,7 @@ class ResumeController extends Controller
         
         if($request->filled('min_score')) {
             $min_score = $request->min_score;
-            $query->where("point", ">=", $min_score);
+            $query->where("point", ">", $min_score);
         }
         $summaries = $query->orderby('point', 'desc')->paginate(7)->appends($request->query());
         
@@ -60,7 +60,7 @@ class ResumeController extends Controller
             'resumes.*.max' => 'Some files are too large (Max 2MB).',
         ]);
 
-        $binPath = 'C:/poppler/library/bin/pdftotext.exe';
+        $binPath = '/poppler/library/bin/pdftotext.exe';
 
         foreach($resumes as $resume) {
             $path = $resume->store('resumes', 'public');
